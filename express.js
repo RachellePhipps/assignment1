@@ -38,14 +38,9 @@ fs.readFile('favs.json', 'utf8', function readFileCallback(err,data ){
 
 
 //Get functions
-//Shows user info
+//1.) Shows user info
 app.get('/tweets', function(req, res) {
-  //TODO: send all users' IDs
-  
-//!!
 res.send({tweetinfo: tweetinfo});
-
-
 });
 
 //Shows tweet info
