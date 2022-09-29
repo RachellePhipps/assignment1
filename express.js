@@ -8,39 +8,27 @@ app.use(bodyParser.json());
 
 var fs = require('fs');
 
-
 //global variable for tweet data
-var tweetinfo = [
-
-{
-  id:1,
-  name: 'person1'
-
-},
-{
-  id: 2,
-  name: 'person2'
-
-}
-];
+var tweetinfo = [];
 
 //load the input file
-fs.readFile('favs.json', 'utf8', function readFileCallback(err,data ){
+fs.readFile('favs.json', 'utf8', function readFileCallback(err, data ){
   if(err){
     req.log.info('cannot load a file:' + fileFolder + '/' + _file_name)
     throw err;
   }
   else{
-    //TODO: store loaded data into a global variable for tweet data
+    //DID: store loaded data into a global variable for tweet data
+    tweetinfo = data;
   }
 });
  
-
+/*
 
 //Get functions
-//1.) Shows user info
+//Shows user info
 app.get('/tweets', function(req, res) {
-res.send({tweetinfo: tweetinfo});
+  //TODO: send all users' IDs
 });
 
 //Shows tweet info
@@ -58,16 +46,6 @@ app.get('/searchinfo', function(req, res){
 //Posts created tweets
 app.post('/tweetinfo', function(req, res) {
   //TODO: create a tweet.
-  
-  var tweetName = req.body.name;
-  currentId++;
-
-tweetinfo.push({
-  id: currentId,
-  name: productName
-
-});
-res.send('Successfully created tweet!');
 
 });
 
@@ -79,38 +57,16 @@ app.post('/searchinfo', function(req, res) {
 //Update
 app.put('/tweets/:nm', function(req, res) {
   //TODO: update tweets
-
-
-  var nm = req.params.nm;
-  var newid = req.params.id;
-
-  var found = false;
-
-  tweetinfo.forEach(function(tweet, index) {
-    if (!found && tweet.name == nm) {
-      tweet.id = newid;
-
-    }
-  });
-  res.send('Successfully updated tweet!');
 });
 
 //Delete 
 app.delete('/tweetinfo/:tweetid', function(req, res) {
   //TODO: delete a tweet
-  var id = req.params.id;
 
-  var found = false;
-
-  tweet.forEach(function(tweet, index){
-    if (!found && tweet.id === Number(id)){
-      tweet.splice(index, 1);
-    }
-  });
-  res.send('Successfully deleted tweet.');
 });
 
-
+*/
 app.listen(PORT, function() {
   console.log('Server listening on ' + PORT);
 });
+
