@@ -2,6 +2,10 @@
 $(function() {
    //Get 
    $('#get-button').on('click', function() {
+
+   // console.log('TEST');
+
+
         //TODO: get all users' IDs & display it
       $.ajax({
         url: '/tweets',
@@ -23,7 +27,7 @@ $(function() {
               </tr>\
           ');
       });
-    }
+   }
   });
 });
 
