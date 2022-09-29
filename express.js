@@ -17,16 +17,12 @@ var tweetinfo = [
   name: 'person1'
 
 },
-
 {
   id: 2,
   name: 'person2'
 
 }
-
-
 ];
-//9:03
 
 //load the input file
 fs.readFile('favs.json', 'utf8', function readFileCallback(err,data ){
