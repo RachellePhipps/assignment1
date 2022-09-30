@@ -52,6 +52,7 @@ app.get('/searchinfo', function(req, res){
 //Posts created tweets 
 app.post('/tweetinfo', function(req, res) {
   //TODO: create a tweet.
+        res.send('make new tweet');
 
 });
 
@@ -63,15 +64,37 @@ app.post('/searchinfo', function(req, res) {
 //Update 5.
 app.put('/tweets/:nm', function(req, res) {
   //TODO: update tweets
+    //grab nm
+    var name = req.params.nm;
+    var newName = req.body.newName;
+
+ var found = false;
+
+    //iterate over tweets
+    tweets.forEach(function(tweet, name){
+      if (!found && tweet.name == name){
+          tweet.name = newName;
+      }
+    });
+
+    res.send('updated tweet');
 });
 
 //Delete  6.
 app.delete('/tweetinfo/:tweetid', function(req, res) {
   //TODO: delete a tweet
 
+    var tweetid = req.params.id;
 
+    var found = false;
+
+    tweets.forEach(function(tweet, index) {
+        if (!found && tweet.id == tweetid) {
+          tweets.splice(index, 1);
+        }
+    });
+      res.send('deleted');
 });
-
 
 app.listen(PORT, function() {
   console.log('Server listening on ' + PORT);
