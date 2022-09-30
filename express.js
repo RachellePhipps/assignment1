@@ -11,105 +11,112 @@ var tweetinfo = [];
 var searchedtweets = [];
 
 
+//reads favs.json file and put into tweetinfo array
 fs.readFile('favs.json', 'utf8', function readFileCallback(err,data ){
   if(err){
     req.log.info('cannot load a file:' + fileFolder + '/' + _file_name)
     throw err;
   }
   else{
+    //parse and store into tweetinfo
    tweetinfo = JSON.parse(data);
   }
 });
  
-//---------------------------------
+/*
+  GET ---
+*/
 
-//Get functions
-//Shows 
+//sends tweetinfo for Users' ID 
 app.get('/tweets', function(req, res) {
+  //sends tweetinfo as "tweets"
   res.send({tweets: tweetinfo});
 });
 
-//Shows tweet info
+//sends tweetinfo for getting all tweets
 app.get('/tweetinfo', function(req, res) {
   res.send({tweets: tweetinfo});
 });
 
-//Shows searched tweets 
+//Gets and sends tweetinfo and already known searchedtweets arrays
 app.get('/searchinfo', function(req, res){
   res.send({tweets: tweetinfo, searchedTweets: searchedtweets});
-  //^^ this gets a single tweet in the big array and like posts it
 });
 
-//---------------------------------
+/*
+  POST ---
+*/
 
-//Post functions
-//Posts created tweets 
+//Post that receives the new id and text next and then pushes a new tweet
 app.post('/tweetinfo/:newID', function(req, res) {
-  //TODO: create a tweet.
+  //get new id and text
     var newid = Number(req.params.newID);
     var newtext = req.body.newtxt;
 
+  //push new tweet to tweetinfo
   tweetinfo.push({
     "id": newid,
     "text": newtext });
 });
 
-//Posts searched tweets
+//Post that receives the id, created_at, and text of the searched tweet
+//the tweet is then put into searchedtweets
 app.post('/searchinfo', function(req, res) {
   
-  //var foundTweet = req.body.foundTweet;
-
+  //create vars
   var newid = Number(req.body.foundID);
   var newCA = req.body.foundCA;
   var newtext = req.body.foundtext;
 
+  //push searched tweet into searchedtweets
   searchedtweets.push({
     "id": newid,
     "text": newtext,
     "created_at": newCA
   });
-
 });
 
 
-//---------------------------------
+/*
+  PUT ---
+*/
 
-
-//Update 5. DONE HAH!
+//Update a sceen_name with a given new name
+//Receives the old name and iterates over tweets until a match is found to replace
 app.put('/tweets/:oldSName', function(req, res) {
-  //TODO: update tweets
+  //new vars
     var name = req.params.oldSName;
     var newName = req.body.newName;
     var found = false;
+    
     //iterate over tweets
     tweetinfo.forEach(function(tweet, index) {
       if (!found && tweet.user.screen_name == name){
+        //replace old with new
           tweet.user.screen_name = newName;
       }
     });
-
     res.send('updated tweet');
 });
 
+/*
+    DELETE ---
+*/
 
-//---------------------------------
-
-//Delete  6.
+//Delete a tweet given ID
 app.delete('/tweetinfo/:tweetid', function(req, res) {
-
+  //receive ID
   var ID = req.params.tweetid;
-
   var found = false;
 
-  
+  //iterate until a match with the ID is found, then splice "remove" it  
   tweetinfo.forEach(function(tweet, index) {
     if (!found && tweet.id === Number(ID)) {
+      //remove matched ID tweet
         tweetinfo.splice(index, 1);
     }
   });
-
 });
-//---------------------------------
 
 app.listen(PORT, function() {
   console.log('Server listening on ' + PORT);
