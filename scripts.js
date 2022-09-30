@@ -47,9 +47,27 @@ $(function() {
    //Get Recently Searched Button
    $('#get-searched-tweets').on('click', function() {
        //TODO: get a searched tweet(s) & display it
-      
+      //dislay a liiiiist dog
 
+      $.ajax({
+        url: '/searchinfo',
+        method: 'GET',
+        contentType: 'application/json',
+        success: function(response){
+            var tbodyEl = $(searchbody);
+            tbodyEl.html('');
+          response.searchedTweets.forEach(function(tweet) {
+            tbodyEl.append('\
+            <tr>\
+              <td class="user">' + tweet.id + '</td>\
+              <td class="user">' + tweet.text + '</td>\
+              <td class="user">' + tweet.created_at + '</td>\
+            </tr>\
+            ');
 
+          });
+        }
+      });
    });
 
    //CREATE
@@ -87,7 +105,7 @@ $(function() {
 
     $.ajax({
       url: '/searchinfo',
-    //  method: 'GET',
+      method: 'GET',
       contentType: 'application/json',
       success: function(response) {
         var tbodyEl = $(searchbody);
@@ -101,9 +119,19 @@ $(function() {
             <td class="user">' + tweet.created_at + '</td>\
           </tr>\
           ');
+          $.ajax({
+            url: '/searchinfo',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(({foundID: tweet.id, foundtext: tweet.text, foundCA: tweet.created_at})),
+            success: function(response){
+              console.log(response);
+              console.log('made it to like 129 or so');
+                 }   
+            });
           }
         });
-        console.log("done?");
+        console.log("done.");
       }
     });
   });  

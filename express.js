@@ -36,7 +36,7 @@ app.get('/tweetinfo', function(req, res) {
 
 //Shows searched tweets 
 app.get('/searchinfo', function(req, res){
-  res.send({tweets: tweetinfo});
+  res.send({tweets: tweetinfo, searchedTweets: searchedtweets});
   //^^ this gets a single tweet in the big array and like posts it
 });
 
@@ -56,8 +56,18 @@ app.post('/tweetinfo/:newID', function(req, res) {
 
 //Posts searched tweets
 app.post('/searchinfo', function(req, res) {
-  //searchs the SINGLE tweet
   
+  //var foundTweet = req.body.foundTweet;
+
+  var newid = Number(req.body.foundID);
+  var newCA = req.body.foundCA;
+  var newtext = req.body.foundtext;
+
+  searchedtweets.push({
+    "id": newid,
+    "text": newtext,
+    "created_at": newCA
+  });
 
 });
 
@@ -91,7 +101,7 @@ app.delete('/tweetinfo/:tweetid', function(req, res) {
 
   var found = false;
 
-  //number is NOT working but delete is so the problem converting to correct form
+  
   tweetinfo.forEach(function(tweet, index) {
     if (!found && tweet.id === Number(ID)) {
         tweetinfo.splice(index, 1);
