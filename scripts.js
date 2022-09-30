@@ -1,13 +1,5 @@
-//<td class="id">' + tweet.id + '</td>\
-/**
- *   <td><input type="text" class="user" value"' + tweet.id + '"></td>\
-                <td><input type="text" class="user" value"' + tweet.screen_name + '"></td>\
-                <td><input type="text" class="user" value"' + tweet.name + '"></td>
- */
 $(function() {
-  
-
-  //DONE: get users' ids
+  //Get users; ID
   $('#get-button').on('click', function() {
       $.ajax({
           url: '/tweets',
@@ -18,7 +10,7 @@ $(function() {
             response.tweets.forEach(function(tweet) {
               tbodyEl.append('\
               <tr>\
-                <td class="id">' + tweet.id + '</td>\
+                <td class="user">' + tweet.id + '</td>\
                 <td class="user">' + tweet.user.screen_name + '</td>\
                 <td class="user">' + tweet.user.name + '</td>\
               </tr>\
@@ -39,7 +31,7 @@ $(function() {
           response.tweets.forEach(function(tweet) {
             tbodyEl.append('\
             <tr>\
-              <td class="id">' + tweet.id + '</td>\
+              <td class="user">' + tweet.id + '</td>\
               <td class="user">' + tweet.text + '</td>\
               <td class="user">' + tweet.created_at + '</td>\
             </tr>\
@@ -55,50 +47,70 @@ $(function() {
    //Get Recently Searched Button
    $('#get-searched-tweets').on('click', function() {
        //TODO: get a searched tweet(s) & display it
+      
 
-       
+
    });
 
+   //CREATE
+   $('#create-form').on('submit', function(event){
+    event.preventDefault();
 
- //Create Tweet FORM
- $('#create-form').on('submit', function(event){
-       event.preventDefault(); //prevent hard refresh
+    var createInput = $('#create-input');
+    var inputString = createInput.val();
 
-       var updateInput = $('#update-input');
-       var inputString = updateInput.val();
-    
-       const parsedStrings = inputString.split(';');
-    
-       var id = parsedStrings[0];
-       var newName = parsedStrings[1];
+    const parsedStrings = inputString.split(';');
 
-       $.ajax({
-          url: '/tweetinfo', //CHANGE THIS
-          method: 'POST',
-          contentType: 'application/json',
-         // data: {id: createInput.id, name: createInput.name},
-          success: function(response){
-              console.log(response);
+    var newID = parsedStrings[0];
+    var newTEXT = parsedStrings[1];
 
-              //empty it
-              createInput.val('');
-
-          }
-
-
-       });
-
-       //TODO: creat a tweet
- });
+    $.ajax({
+        url: '/tweetinfo/' + newID,
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({newtxt : newTEXT}),
+        success: function(response){
+          console.log(response);
+          createInput.val('');
+        }
+    });    
+});
 
    // question 4 / Search form
  $('#search-form').on('submit', function(event){
    event.preventDefault();
-   var userID = $('#search-input');
-   
-   //TODO: search a tweet and display it.
+   var searchInp = $('#search-input');
+   var userID =  searchInp.val();
 
- });
+    //your given this, must find in big array
+    var found = false;
+
+    $.ajax({
+      url: '/searchinfo',
+    //  method: 'GET',
+      contentType: 'application/json',
+      success: function(response) {
+        var tbodyEl = $(searchbody);
+        tbodyEl.html('');
+        response.tweets.forEach(function(tweet) {
+          if (!found && tweet.id === Number(userID)){
+          tbodyEl.append('\
+          <tr>\
+            <td class="user">' + tweet.id + '</td>\
+            <td class="user">' + tweet.text + '</td>\
+            <td class="user">' + tweet.created_at + '</td>\
+          </tr>\
+          ');
+          }
+        });
+        console.log("done?");
+      }
+    });
+  });  
+
+
+
+
 
  //UPDATE 5. / Update user FORM
  $("#update-user").on('submit', function(event){
@@ -107,7 +119,6 @@ $(function() {
    var inputString = updateInput.val();
 
    const parsedStrings = inputString.split(';');
-
    var oldSName = parsedStrings[0];
    var newName = parsedStrings[1];
 
@@ -119,28 +130,25 @@ $(function() {
         success: function(response){
           console.log(response);
         }
-
     });
  });
 
 
  //DELETE 6 / Delete tweet FORM
  $("#delete-form").on('submit', function() {
-   var tweetid = $('#delete-input');
-  $.ajax({
-    url: '/tweetinfo/' + tweetid,
-    method: 'DELETE',
-    contentType: 'application/json',
-    success: function(response){
-      console.log(response);
-    }
-  });
 
+ var deleteInput = $('#delete-input');
+ var tweetid =  deleteInput.val();
 
-
+      $.ajax({
+          url: '/tweetinfo/' + tweetid,
+          method: 'DELETE',
+          contentType: 'application/json',
+          success: function(response){
+         console.log(response);
+          }
+      });
  });
-
-
 });
                    
   
