@@ -5,7 +5,9 @@
                 <td><input type="text" class="user" value"' + tweet.name + '"></td>
  */
 $(function() {
-  //GetUsers button
+  
+
+  //DONE: get users' ids
   $('#get-button').on('click', function() {
       $.ajax({
           url: '/tweets',
@@ -13,23 +15,38 @@ $(function() {
           success: function(response){
               var tbodyEl = $(namebody);
               tbodyEl.html('');
-           
             response.tweets.forEach(function(tweet) {
               tbodyEl.append('\
               <tr>\
                 <td class="id">' + tweet.id + '</td>\
-                <td class="screen_name">' + tweet.screen_name + '</td>\
-                <td class="name">' + tweet.name + '</td>\
+                <td class="user">' + tweet.user.screen_name + '</td>\
+                <td class="user">' + tweet.user.name + '</td>\
               </tr>\
               ');
             });
           }
       });
   });
-   //Get tweets button
+  
+   //DONE: get all tweets
    $('#get-tweets-button').on('click', function(){
-       //TODO: get tweet info and display it
-
+       $.ajax({
+        url: '/tweetinfo',
+        contentType: 'application/json',
+        success: function(response){
+            var tbodyEl = $(tweetbody);
+            tbodyEl.html('');
+          response.tweets.forEach(function(tweet) {
+            tbodyEl.append('\
+            <tr>\
+              <td class="id">' + tweet.id + '</td>\
+              <td class="user">' + tweet.text + '</td>\
+              <td class="user">' + tweet.created_at + '</td>\
+            </tr>\
+            ');
+          });
+        }
+    });
 
 
 
@@ -38,6 +55,8 @@ $(function() {
    //Get Recently Searched Button
    $('#get-searched-tweets').on('click', function() {
        //TODO: get a searched tweet(s) & display it
+
+       
    });
 
 
@@ -89,11 +108,11 @@ $(function() {
 
    const parsedStrings = inputString.split(';');
 
-   var name = parsedStrings[0];
+   var oldSName = parsedStrings[0];
    var newName = parsedStrings[1];
 
     $.ajax({
-        url: '/tweets' + name,
+        url: '/tweets/' + oldSName,
         method: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify({newName: newName}),
@@ -107,13 +126,9 @@ $(function() {
 
  //DELETE 6 / Delete tweet FORM
  $("#delete-form").on('submit', function() {
-   var id = $('#delete-input')
-   event.preventDefault();
-
-   //TODO: delete a tweet
-
+   var tweetid = $('#delete-input');
   $.ajax({
-    url: '/tweetinfo' + id,
+    url: '/tweetinfo/' + tweetid,
     method: 'DELETE',
     contentType: 'application/json',
     success: function(response){
